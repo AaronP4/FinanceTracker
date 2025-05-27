@@ -40,6 +40,10 @@ public class TransactionManager {
 		transactions.clear();
 	}
 	
+	public void removeLast() {
+		transactions.remove(transactions.size() - 1);
+	}
+	
 	public void saveToFile(String filename) throws IOException {
 		BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
 		for (Transaction t : transactions) {
@@ -61,5 +65,26 @@ public class TransactionManager {
 	
 	public void clearFile(String filename) throws IOException {
 		new BufferedWriter(new FileWriter(filename)).close();
+	}
+	
+	public void removeLastLine(String filename) throws IOException {
+		List<String> lines = new ArrayList<>();
+		
+		BufferedReader reader = new BufferedReader(new FileReader(filename));
+		String line;
+		while((line = reader.readLine()) != null) {
+			lines.add(line);
+		}
+		reader.close();
+		
+		if(!lines.isEmpty()) {
+			lines.remove(lines.size() - 1);
+		}
+		
+		BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+		for (String linet : lines) {
+			writer.write(linet + "\n");
+		}
+		writer.close();
 	}
 }

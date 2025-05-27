@@ -24,7 +24,7 @@ public class FinanceTracker {
 		JTextField amount = new JTextField(20);
 		String[] types = {"Income", "Expense"};
 		JComboBox<String> type = new JComboBox(types);
-		String[] categories = {"Salary", "Food", "Car", "Other"};
+		String[] categories = {"Pay Check", "Food", "Car", "Other"};
 		JComboBox<String> category = new JComboBox(categories);
 		JButton addButton = new JButton("Add");
 		
@@ -35,8 +35,8 @@ public class FinanceTracker {
 		panelInput.add(new JLabel(""));
 		panelInput.add(description);
 		panelInput.add(amount);
-		panelInput.add(category);
 		panelInput.add(type);
+		panelInput.add(category);
 		panelInput.add(addButton);
 		
 		String[] columns = {"Description", "Amount", "Category", "Type"};
@@ -44,24 +44,39 @@ public class FinanceTracker {
 		table = new JTable(model);
 		JScrollPane scrollTable = new JScrollPane(table);
 		
-		JPanel panelDisplay = new JPanel(new GridLayout(1, 4));
+		JPanel panelDisplay = new JPanel(new GridLayout(1, 5));
 		incomeLabel = new JLabel("Income: $0.00");
 		expenseLabel = new JLabel("Expenses: $0.00");
 		balanceLabel = new JLabel("Balance: $0.00");
+		JButton deletePreviousButton = new JButton("Delete Last Line");
 		JButton clearButton = new JButton("Clear All");
 		
 		panelDisplay.add(incomeLabel);
 		panelDisplay.add(expenseLabel);
 		panelDisplay.add(balanceLabel);
+		panelDisplay.add(deletePreviousButton);
 		panelDisplay.add(clearButton);
 		
 		addButton.addActionListener(e -> {
 			try { 
-				String desc = description.getText();
-				double amnt = Double.parseDouble(amount.getText());
+				String desc = description.getText().trim();
+				String amntTxt = amount.getText().trim();
 				String cat = (String) category.getSelectedItem();
 				String typ = (String) type.getSelectedItem();
-			
+				
+				if (desc.equals(null) || desc.equals("")) {
+					throw new IllegalArgumentException("Description cannot be empty.");
+				}
+				if (!amntTxt.matches("\\d+(\\.\\d{1,2})?")) {
+		            throw new IllegalArgumentException("Invalid amount input. Enter amount without '$' or ','");
+		        }
+				double amnt = Double.parseDouble(amntTxt);
+				if (typ.equals("Income") && !(cat.equals("Pay Check")) && !(cat.equals("Other"))) {
+					throw new IllegalArgumentException("Invalid category for Income.");
+				}
+				if (typ.equals("Expense") && cat.equals("Pay Check")) {
+					throw new IllegalArgumentException("Invalid category for Expense.");
+				}
 				Transaction t = new Transaction(desc, amnt, typ, cat);
 				manager.addTransaction(t);
 			
@@ -72,8 +87,14 @@ public class FinanceTracker {
 			
 				description.setText("");
 				amount.setText("");
+			} catch (IllegalArgumentException ex) {
+				JOptionPane.showMessageDialog(frame, ex.getMessage());
+				description.setText("");
+				amount.setText("");
 			} catch (Exception ex) {
 				JOptionPane.showMessageDialog(frame, "Invalid input.");
+				description.setText("");
+				amount.setText("");
 			}
 		});
 		
@@ -83,6 +104,23 @@ public class FinanceTracker {
 			update();
 			try {
 				manager.clearFile("transactions.txt");
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		});
+		
+		deletePreviousButton.addActionListener(e -> {
+			if (model.getRowCount() > 0) {
+			    model.removeRow(model.getRowCount() - 1);
+			}
+			try {
+			manager.removeLast();
+			update();
+			} catch (Exception e2) {
+				JOptionPane.showMessageDialog(frame, "Table is already empty.");
+			}
+			try {
+				manager.removeLastLine("transactions.txt");
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
