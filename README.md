@@ -1,9 +1,22 @@
 # FinanceTracker
-Finance tracker java app that keeps track of income and expenses.
+A simple java app built with Swing that keeps track of users income and expenses.
 
-Transactions can be added by giving a breif description, the dollar amount, appropriate category, select wether it's income or expense, and then click "Add" button. All transactions are saved in a local text file.
-![Add Transaction](addButtonDemo.gif)
+---
 
-There is a "Clear All" that clears the table and the local text file.
-![Add Transaction](clearButtonDemo.gif)
+##Features
+
+-Add transactions by giving a description, dollar amount, category, and type.
+-Remove the previous transaction.
+-Clear all the transactions.
+-Data is saved and loaded from a local file.
+
+---
+
+##Demos
+
+### Adding  a Transaction
+![Add Transaction](assets/addDemo.gif)
+
+###Removing Previous or All Transactions
+![Add Transaction](assets/deleteClearDemo.gif)
 
