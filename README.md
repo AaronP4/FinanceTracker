@@ -3,7 +3,7 @@ A simple java app built with Swing that keeps track of users income and expenses
 
 ---
 
-##Features
+## Features
 
 -Add transactions by giving a description, dollar amount, category, and type.
 -Remove the previous transaction.
@@ -12,11 +12,11 @@ A simple java app built with Swing that keeps track of users income and expenses
 
 ---
 
-##Demos
+## Demos
 
 ### Adding  a Transaction
 ![Add Transaction](assets/addDemo.gif)
 
-###Removing Previous or All Transactions
+### Removing Previous or All Transactions
 ![Add Transaction](assets/deleteClearDemo.gif)
 
