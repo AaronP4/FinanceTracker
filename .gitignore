@@ -9,3 +9,5 @@
 # Compiled class files
 bin/
 
+.DS_Store
+bin/
